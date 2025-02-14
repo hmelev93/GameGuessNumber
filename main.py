@@ -3,32 +3,40 @@ import json
 import os
 
 
-def save_game(state, filename="game_state.json"):
+def save_game(state, username, filename="game_state.json"):
+    data = load_game(filename) or {}
+    data[username] = state
     with open(filename, "w") as f:
-        json.dump(state, f)
+        json.dump(data, f)
 
 
 def load_game(filename="game_state.json"):
     if os.path.exists(filename):
         with open(filename, "r") as f:
             return json.load(f)
-    return None
+    return {}
 
 
-def play_game():
-    print("Добро пожаловать в игру 'Угадай число'!")
-    print("Я загадал число от 1 до 100. Попробуйте угадать его!")
+def play_game(username):
+    
 
-    secret_number = random.randint(1, 100)
-    attempts = 0
+    data = load_game()
+    user_data = data.get(username, {})
+    secret_number = user_data.get("secret_number", random.randint(1, 100))
+    attempts = user_data.get("attempts", 0)
+    games_count = user_data.get("games", 1)
+    history = user_data.get("history", [])
     max_attempts = 10
-    history = []
+
+    if attempts < 1:
+        print(f"Добро пожаловать в игру 'Угадай число', {username}!")
+        print("Я загадал число от 1 до 100. Попробуйте угадать его!")
 
     while attempts < max_attempts:
         try:
-            guess = input("Введите число (или 'выход' для завершения игры): ")
-            if guess.lower() == "выход":
-                save_game({"secret_number": secret_number, "attempts": attempts, "history": history})
+            guess = input("Введите число от 1 до 100 \n q - выход\n5 ")
+            if guess.lower() == "q":
+                save_game({"secret_number": secret_number, "attempts": attempts, "history": history, "games": games_count}, username)
                 print("Игра сохранена. До встречи!")
                 return
 
@@ -39,13 +47,17 @@ def play_game():
 
             attempts += 1
             history.append(guess)
-
             if guess < secret_number:
                 print("Слишком маленькое!")
             elif guess > secret_number:
                 print("Слишком большое!")
             else:
-                print(f"Поздравляю! Вы угадали число {secret_number} за {attempts} попыток!")
+                print(f"Поздравляю, {username}! Вы угадали число {secret_number} за {attempts} попыток!")
+                data.pop(username, None)
+                with open("game_state.json", "w") as f:
+                    games_count += 1
+                    data[username] = {"game_count": games_count}
+                    json.dump(data, f)
                 return
 
             print(f"Осталось попыток: {max_attempts - attempts}")
@@ -54,21 +66,25 @@ def play_game():
             print("Пожалуйста, введите целое число.")
 
     print(f"Вы исчерпали {max_attempts} попыток. Загаданное число было {secret_number}.")
+    data.pop(username, None)
+    with open("game_state.json", "w") as f:
+        games_count += 1
+        data[username] = {"game_count": games_count}
+        json.dump(data, f)
 
 
 def main():
-    if os.path.exists("game_state.json"):
-        choice = input("Обнаружено сохранение. Хотите продолжить игру? (да/нет): ").lower()
-        if choice == "да":
-            state = load_game()
-            if state:
-                print(
-                    f"Продолжаем! Загаданное число {state['secret_number']} (но вы его не видите). Попыток использовано: {state['attempts']}")
-                play_game()
-                os.remove("game_state.json")
-                return
+    username = input("Введите ваше имя: ")
+    data = load_game()
+    if username in data:
+        if "attempts" in data[username]:
+            print(f"Продолжаем игру, {username}! Попыток использовано: {data[username]['attempts']}")
+            play_game(username)
+        else:
+            play_game(username)
+        return
 
-    play_game()
+    play_game(username)
 
 
 if __name__ == "__main__":
