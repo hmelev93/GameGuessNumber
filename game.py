@@ -16,10 +16,10 @@ def play_game(username,max_num):
     while attempts < max_attempts:
         try:
             guess = input("Введите число ('q' - выход): ")
-            if guess.lower() == "выход":
+            if guess.lower() == "q":
                 save_game({"secret_number": secret_number, "attempts": attempts, "history": history}, username)
                 print("Игра сохранена. До встречи!")
-            
+                exit()
             guess = int(guess)
             if guess < 1 or guess > 100:
                 print(f"Пожалуйста, введите число от 1 до {max_num}.")
