@@ -1,14 +1,17 @@
 import os
 def menu():
+    last_message = ""
     try:
-        max_num = 100
         while True:
             os.system('cls')
+            max_num = 100
+            print(last_message)
             print(f"Игра 'Угадай число' позволяет вам угадывать числа в диапазоне от 1 до {max_num}.")
             print("\nМеню:")
             print("a - Играть")
             print("b - Конечное число")
             print("q - Выход")
+            print("del - удалить статистику")
             choice = input("Выберите действие: ").lower()
             
             match choice:
@@ -36,12 +39,23 @@ def menu():
                                 print("Ошибка: введите число от 1 до 1000.")
                         except ValueError:
                             print("Ошибка: введите целое число.")
-                    print(f"Вы ввели: {max_num}")
+                    last_message = f"Вы ввели: {max_num}"
                     continue
                 case "q":
                     print("Выход из игры. До свидания!")
                     break
+                case "del":
+                    pwd = input("пароль: ")
+
+                    if pwd == "1234":
+                        # if os.path.exists("game_state.json"):
+                        os.remove("game_state.json")
+                        last_message = "...вся статистика удалена"
+                        continue
+                    else:
+                        last_message = "неправильный пароль"
+                        continue
                 case _:
-                    print("Некорректный ввод. Попробуйте снова.")
+                    last_message= "Некорректный ввод. Попробуйте снова."
     except KeyboardInterrupt:
         print("\nВыход из программы.")

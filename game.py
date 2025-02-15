@@ -10,6 +10,7 @@ def play_game(username,max_num):
     user_data = data.get(username, {})
     secret_number = user_data.get("secret_number", random.randint(1, 100))
     attempts = user_data.get("attempts", 0)
+    max_num = user_data.get("max_num", 100)
     games_count = user_data.get("games_count", 1)
     history = user_data.get("history", [])
     
@@ -28,7 +29,7 @@ def play_game(username,max_num):
         try:
             guess = input("Введите число ('q' - выход): ")
             if guess.lower() == "q":
-                save_game({"secret_number": secret_number, "attempts": attempts, "history": history, "games_count": games_count}, username)
+                save_game({"secret_number": secret_number, "attempts": attempts, "history": history, "games_count": games_count, "max_num": max_num}, username)
                 print("Игра сохранена. До встречи!")
                 exit()
             guess = int(guess)
