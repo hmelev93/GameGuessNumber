@@ -13,3 +13,11 @@ def load_game(filename="game_state.json"):
         with open(filename, "r") as f:
             return json.load(f)
     return {}
+
+def reload_game(games_count,username,filename="game_state.json"):
+    data = load_game(filename) or {}
+    data.pop(username, None)
+    games_count += 1
+    with open("game_state.json", "w") as f:
+        data[username] = {"game_count": games_count}
+        json.dump(data, f)

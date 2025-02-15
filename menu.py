@@ -22,7 +22,7 @@ def menu():
                             break  # Выход из цикла, если число в пределах допустимого
                         else:
                             print(f"Здравствуй: {username}")
-                            continue
+                            break
                     from game import play_game
                     play_game(username,max_num)
                 case "b":
