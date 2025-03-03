@@ -1,4 +1,5 @@
 import random
+import os
 from menu import menu
 from storage import save_game, load_game, reload_game
 
@@ -47,9 +48,12 @@ def play_game(username,max_num):
             else:
                 print(f"Поздравляю, {username}! Вы угадали число {secret_number} за {attempts} попыток!")
                 reload_game(games_count,username)
-                restart = input(f"Сыграть еще раз? (f - продолжить): ")
+                restart = input(f"Сыграть еще раз? (f - продолжить | q - выход): ")
                 if restart.lower() == "f":
                     menu()
+                if restart.lower() == "q":
+                    os.system('cls')
+                    exit()
                 else:
                     print("До встречи!")
                     return
