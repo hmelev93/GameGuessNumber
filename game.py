@@ -19,12 +19,12 @@ def play_game(username,max_num):
     
     if username in data:
         if "attempts" in data[username]:
-            continue_game = input(f"Попыток осталось {max_attempts - data[username]['attempts']} \nПродолжить игру?\n w - продолжить: ")
+            continue_game = input(f"Попыток осталось {max_attempts - data[username]['attempts']} \nПродолжить игру?\n w - продолжить: \n q - выход: ")
             if continue_game == "w":
                 pass
             else:
                 reload_game(games_count,username)
-                exit()
+                menu(max_num)
 
     while attempts < max_attempts:
         try:
@@ -50,7 +50,7 @@ def play_game(username,max_num):
                 reload_game(games_count,username)
                 restart = input(f"Сыграть еще раз? (f - продолжить | q - выход): ")
                 if restart.lower() == "f":
-                    menu()
+                    menu(max_num)
                 if restart.lower() == "q":
                     os.system('cls')
                     exit()

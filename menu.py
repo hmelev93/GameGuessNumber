@@ -1,34 +1,35 @@
 import os
-def menu():
+
+def menu(max_num):
     last_message = ""
     try:
         while True:
             os.system('cls')
-            max_num = 100
+            
             print(last_message)
             print(f"Игра 'Угадай число' позволяет вам угадывать числа в диапазоне от 1 до {max_num}.")
             print("\nМеню:")
-            print("a - Играть")
-            print("b - Конечное число")
+            print("w - Играть")
+            print("d - Максимальное число")
             print("q - Выход")
             print("del - удалить статистику")
             choice = input("Выберите действие: ").lower()
             
             match choice:
-                case "a":
+                case "w":
                     os.system('cls')
                     while True:
-                        username = input("Введите ваше имя: (s - общий режим): ")
+                        username = input("Введите ваше имя:\n(s - общий режим): ")
                         username = str(username)
                         if username == "s":
-                            username = "no_name_mode"
-                            break  # Выход из цикла, если число в пределах допустимого
+                            username = ""
+                            break  # Выход из цикла
                         else:
                             print(f"Здравствуй: {username}")
                             break
                     from game import play_game
                     play_game(username,max_num)
-                case "b":
+                case "d":
                     while True:
                         max_num = input("Введите максимальное число: ")
                         try:
@@ -43,10 +44,10 @@ def menu():
                     continue
                 case "q":
                     print("Выход из игры. До свидания!")
-                    break
+                    exit()
+                    
                 case "del":
                     pwd = input("пароль: ")
-
                     if pwd == "1234":
                         # if os.path.exists("game_state.json"):
                         os.remove("game_state.json")
